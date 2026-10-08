@@ -242,3 +242,47 @@ print(json.dumps(summary, ensure_ascii=False, indent=2))
 # - +4 độ chặt chẽ: chạy thêm giám khảo qua API khác họ (ví dụ `JUDGE_PROVIDER=gemini`) và báo `cross_judge.agreement`.
 #
 # **Tiếp theo:** NB5 (GGUF) hoặc NB6 (benchmark).
+
+# %% [markdown]
+# ## 6. Đóng gói artifacts nộp bài (1-Click Download cho Colab)
+#
+# Chạy ô này để tự động nén tất cả file kết quả cần nộp thành `lab22_artifacts.zip` và tải về máy.
+# Sau khi tải về, chỉ cần giải nén đè vào repo trên máy cá nhân rồi chạy `make verify`!
+
+# %%
+import zipfile
+
+def package_submission(zip_path="/content/lab22/lab22_artifacts.zip"):
+    work = Path("/content/lab22") if Path("/content/lab22").exists() else C.REPO_ROOT
+    files_to_pack = [
+        work / "submission/screenshots/02-sft-loss.png",
+        work / "submission/screenshots/02b-pref-length.png",
+        work / "submission/screenshots/03-dpo-reward-curves.png",
+        work / "submission/screenshots/04-side-by-side-table.png",
+        work / "data/eval/side_by_side.jsonl",
+        work / "data/eval/judge_summary.json",
+        work / "data/eval/judge_results_rm.json",
+        work / "adapters/sft-mini/adapter_config.json",
+        work / "models/sft-merged/config.json",
+        work / "adapters/dpo/adapter_config.json",
+        work / "adapters/dpo/dpo_metrics.json",
+    ]
+    with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
+        for f in files_to_pack:
+            if f.exists():
+                arcname = str(f.relative_to(work))
+                zf.write(f, arcname)
+                print(f"  + Đã nén: {arcname}")
+            else:
+                print(f"  - Chưa tìm thấy: {f.name}")
+    print(f"\n✓ Đã tạo file: {zip_path}")
+    try:
+        from google.colab import files
+        files.download(str(zip_path))
+        print("✓ Đã gửi lệnh tải file về máy.")
+    except Exception:
+        pass
+
+if Path("/content/lab22").exists():
+    package_submission()
+
