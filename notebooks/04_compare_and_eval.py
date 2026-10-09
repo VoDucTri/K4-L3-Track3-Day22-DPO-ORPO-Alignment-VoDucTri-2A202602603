@@ -262,10 +262,22 @@ def package_submission(zip_path="/content/lab22/lab22_artifacts.zip"):
         work / "data/eval/side_by_side.jsonl",
         work / "data/eval/judge_summary.json",
         work / "data/eval/judge_results_rm.json",
+        work / "data/pref/train.parquet",
+        work / "data/pref/eval.parquet",
+        work / "data/pref/stats.json",
         work / "adapters/sft-mini/adapter_config.json",
         work / "models/sft-merged/config.json",
         work / "adapters/dpo/adapter_config.json",
         work / "adapters/dpo/dpo_metrics.json",
+        work / "adapters/dpo/split.json",
+        # Bonus artifacts (if run)
+        work / "adapters/variants/variants_summary.json",
+        work / "submission/screenshots/03b-variants.png",
+        work / "data/eval/deploy_meta.json",
+        work / "data/eval/benchmark_results.json",
+        work / "submission/screenshots/07-benchmark-comparison.png",
+        work / "adapters/grpo/grpo_metrics.json",
+        work / "submission/screenshots/08-grpo-reward.png",
     ]
     with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
         for f in files_to_pack:
